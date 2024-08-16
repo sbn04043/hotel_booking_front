@@ -6,8 +6,6 @@ import axios from "axios";
 
 let HotelOne = () => {
 
-
-
     let location = useLocation()
     let nevigate = useNavigate()
 

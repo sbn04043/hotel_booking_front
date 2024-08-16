@@ -10,7 +10,6 @@ import ForgotPassword from "./user/ForgotPassword";
 import Register from "./user/Register";
 import SearchHotel from "./search/hotel";
 import HotelOne from "./hotel/hotelOne";
-import Register from "./user/Register";
 import RoomRegister from "./room/RoomRegister";
 import HotelList from "./hotel/HotelList";
 import RoomOne from "./room/RoomOne";
@@ -23,10 +22,8 @@ function App() {
     return (
         <div>
             <Routes>
-
                 <Route path="/" element={<Auth/>}/>
                 <Route path="/hotel/showList" element={<ShowList/>}/>
-                <Route path="/user/register" element={<Register/>}/>
                 <Route path="/user/forgotEmail" element={<ForgotEmail/>}/>
                 <Route path="/user/forgotPassword" element={<ForgotPassword/>}/>
                 <Route path="/search/hotel" element={<SearchHotel/>}/>
