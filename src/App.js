@@ -51,7 +51,7 @@ const App = ({setUserInfo})  => {
                 <Route path="/guest/forgotPassword" element={<ForgotPassword/>}/>
 
                 <Route path="/guest/mypage/:id" element={<Mypage/>}/>
-                <Route path="/guest/mypage/edit" element={<MypageEdit/>}/>
+                <Route path="/guest/mypage/edit/:id" element={<MypageEdit/>}/>
                 <Route path="/guest/myReservations/:id" element={<MyReservations/>}/>
                 <Route path="/guest/wishlist/:id" element={<Wishlist/>}/>
 

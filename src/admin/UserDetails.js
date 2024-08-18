@@ -5,7 +5,7 @@ import './UserDails.css';  // CSS 파일 임포트
 import Navigation from './Navigation';  // Navigation 컴포넌트 임포트
 
 const UserDetails = () => {
-    const { id } = useParams(); // URL에서 id를 가져옴
+    const { id } = useParams();
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
