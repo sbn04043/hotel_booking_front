@@ -25,6 +25,7 @@ import Auth1 from "./user/Auth1";
 import HotelImgInsert from "./hotel/HotelImgInsert";
 import HotelInsert from "./hotel/HotelInsert";
 import HotelUpdate from "./hotel/HotelUpdate";
+import GuestRegister from "./user/GuestRegister";
 
 function ShowList() {
     return null;
@@ -40,7 +41,7 @@ const App = ({ setUserInfo }) => {
                 <Route path="/user/register" element={<Register/>}/>
 
                 <Route path="/guest/auth" element={<Auth1 setUser={setUserInfo}/>}/>
-                {/*<Route path="/guest/register" element={<Register/>}/>*/}
+                <Route path="/guest/register" element={<GuestRegister/>}/>
                 <Route path="/guest/forgotEmail" element={<ForgotEmail/>}/>
                 <Route path="/guest/forgotPassword" element={<ForgotPassword/>}/>
 
