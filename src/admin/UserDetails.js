@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {useNavigate, useParams} from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import './UserDails.css';  // CSS 파일 임포트
+import Navigation from './Navigation';  // Navigation 컴포넌트 임포트
 
 const UserDetails = () => {
     const { id } = useParams(); // URL에서 id를 가져옴
@@ -49,8 +51,8 @@ const UserDetails = () => {
     if (error) return <div>{error}</div>;
 
     return (
-        <div>
-            <h1>User Details</h1>
+        <div className="user-details-container">
+            <h1>사용자 정보 변경</h1>
             <form>
                 <div>
                     <label>회원 번호:</label>
@@ -81,12 +83,15 @@ const UserDetails = () => {
                 </div>
                 <div>
                     <label>권한:</label>
-                    <input
-                        type="text"
+                    <select
                         name="role"
                         value={user.role}
                         onChange={handleInputChange}
-                    />
+                    >
+                        <option value="ROLE_USER">USER</option>
+                        <option value="ROLE_BUSINESS">BUSINESS</option>
+                        <option value="ROLE_ADMIN">ADMIN</option>
+                    </select>
                 </div>
                 <div>
                     <label>주소:</label>

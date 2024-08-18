@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { Pagination, Table, Button, Form, InputGroup, FormControl } from "react-bootstrap";
 import { Link, useNavigate } from 'react-router-dom';
-import './UserList.css';
-import Navigation from './Navigation';
+import './AdminList.css';
 
-const UserList = () => {
+const AdminList = () => {
     const [users, setUsers] = useState([]);
     const [filteredUsers, setFilteredUsers] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -18,20 +17,12 @@ const UserList = () => {
     const usersPerPage = 20;
     const navigate = useNavigate();
 
-    const roleAlias = {
-        USER: '일반 사용자',
-        ROLE_USER: '일반 사용자',
-        BUSINESS: '비즈니스',
-        ROLE_BUSINESS: '비즈니스',
-        ADMIN: '관리자',
-        ROLE_ADMIN: '관리자'
-    };
-
-    const links = [
-        { path: '/admin/', label: '대시보드' },
-        { path: '/admin/userList', label: '사용자 목록' },
-        { path: '/admin/hotelList', label: '호텔 목록' }
-    ];
+    const filterUsersByRole = useCallback(() => {
+        const rolesToShow = ['BUSINESS', 'ROLE_BUSINESS', 'ROLE_ADMIN', 'ADMIN'];
+        const filtered = users.filter(user => rolesToShow.includes(user.role));
+        setFilteredUsers(filtered);
+        setCurrentPage(1);
+    }, [users]);
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -39,9 +30,7 @@ const UserList = () => {
                 const response = await axios.get("http://localhost:8080/admin/userList", {
                     withCredentials: true
                 });
-                const filtered = response.data.filter(user => user.role === 'ROLE_USER' || user.role === 'USER');
-                setUsers(filtered);
-                setFilteredUsers(filtered);
+                setUsers(response.data);
             } catch (error) {
                 console.error("Failed to fetch users:", error);
                 setError('Failed to fetch users');
@@ -51,6 +40,10 @@ const UserList = () => {
         };
         fetchUsers();
     }, []);
+
+    useEffect(() => {
+        filterUsersByRole();
+    }, [filterUsersByRole]);
 
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
@@ -84,7 +77,6 @@ const UserList = () => {
                     userGender: user.userGender,
                     phone: user.phone,
                     role: user.role,
-                    userGrade: user.userGrade,
                     userTotalAmount: user.userTotalAmount,
                     enabled: user.enabled
                 }
@@ -109,7 +101,6 @@ const UserList = () => {
                     userGender: user.userGender,
                     phone: user.phone,
                     role: user.role,
-                    userGrade: user.userGrade,
                     userTotalAmount: user.userTotalAmount,
                     enabled: user.enabled
                 };
@@ -172,22 +163,39 @@ const UserList = () => {
         }
     };
 
-    // const handleLogout = async () => {
-    //     try {
-    //         await axios.post('http://localhost:8080/user/logout', {}, { withCredentials: true });
-    //         navigate('/user/login');
-    //     } catch (error) {
-    //         console.error("Logout failed:", error);
-    //     }
-    // };
+    const handleLogout = async () => {
+        try {
+            await axios.post('http://localhost:8080/user/logout', {}, { withCredentials: true });
+            navigate('/user/login');
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    };
 
     const handleBackClick = () => {
         navigate(-1);
     };
 
-    // const handleMyInfoClick = () => {
-    //     navigate(`/admin/userdetails/${window.user.id}`);
-    // };
+    const handleMyInfoClick = () => {
+        navigate(`/admin/userdetails/${window.user.id}`);
+    };
+
+    const handleRoleUpdate = (userId, newRole) => {
+        setUsers((prevUsers) =>
+            prevUsers.map((user) =>
+                user.id === userId ? { ...user, role: newRole } : user
+            )
+        );
+
+        // 권한이 변경되었을 때, 해당 유저를 수정된 유저 목록에 추가합니다.
+        setEditedUsers((prevEditedUsers) => ({
+            ...prevEditedUsers,
+            [userId]: {
+                ...prevEditedUsers[userId],
+                role: newRole,
+            },
+        }));
+    };
 
     const indexOfLastUser = currentPage * usersPerPage;
     const indexOfFirstUser = indexOfLastUser - usersPerPage;
@@ -208,30 +216,35 @@ const UserList = () => {
     if (error) return <div>{error}</div>;
 
     return (
-        <div className="user-list-container">
-            <header className="dashboard-header">
-                <Navigation links={links}/>
-            </header>
-
-            <h1 className="dashboard-title">사용자 목록</h1>
-
-            <div className="search-container">
-                <InputGroup className="search-group">
-                    <FormControl
-                        placeholder="Search by nickname"
-                        aria-label="Search by nickname"
-                        aria-describedby="basic-addon2"
-                        value={searchTerm}
-                        onChange={handleSearchChange}
-                    />
-                    <Button variant="outline-secondary" id="button-addon2" onClick={handleSearch} className="search-button">
-                        Search
-                    </Button>
-                    <Button onClick={handleBackClick} variant="secondary" className="back-button">뒤로가기</Button>
-                </InputGroup>
+        <div className="admin-list-container">
+            <div className="header">
+                <h1>Admin List</h1>
+                {window.user && (
+                    <div className="current-user-info">
+                        <span>관리자 {window.user.nickname || window.user.username}님</span>
+                        <br />
+                        <Button variant="link" onClick={handleMyInfoClick} className="info-button">내 정보 수정</Button>
+                        <Button variant="link" onClick={handleLogout} className="info-button">로그아웃</Button>
+                    </div>
+                )}
             </div>
 
-            <Table hover striped bordered className="user-list-table">
+            <Button onClick={handleBackClick} variant="secondary" className="back-button">뒤로가기</Button>
+
+            <InputGroup className="search-group">
+                <FormControl
+                    placeholder="Search by nickname"
+                    aria-label="Search by nickname"
+                    aria-describedby="basic-addon2"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                />
+                <Button variant="outline-secondary" id="button-addon2" onClick={handleSearch} className="search-button">
+                    Search
+                </Button>
+            </InputGroup>
+
+            <Table hover striped bordered className="admin-list-table">
                 <thead>
                 <tr>
                     <th>
@@ -248,8 +261,7 @@ const UserList = () => {
                     <th>주소</th>
                     <th>성별</th>
                     <th>휴대폰번호</th>
-                    <th>고객 총 사용 금액</th>
-                    <th>현재 상태</th>
+
                 </tr>
                 </thead>
                 <tbody>
@@ -265,12 +277,18 @@ const UserList = () => {
                         <td>{user.id}</td>
                         <td><Link to={`/admin/userdetails/${user.id}`}>{user.email}</Link></td>
                         <td>{user.nickname || 'N/A'}</td>
-                        <td>{roleAlias[user.role]}</td>
+                        <td>
+                            <Form.Select
+                                value={user.role}
+                                onChange={(e) => handleRoleUpdate(user.id, e.target.value)}
+                            >
+                                <option value="ROLE_BUSINESS">비즈니스</option>
+                                <option value="ROLE_ADMIN">관리자</option>
+                            </Form.Select>
+                        </td>
                         <td>{user.address}</td>
                         <td>{user.userGender}</td>
                         <td>{user.phone}</td>
-                        <td>{user.userTotalAmount}</td>
-                        <td>{user.enabled ? 'Active' : 'Inactive'}</td>
                     </tr>
                 ))}
                 </tbody>
@@ -287,9 +305,9 @@ const UserList = () => {
             </div>
 
             <Pagination className="justify-content-center">
-                <Pagination.First onClick={() => moveToPage(1)}/>
-                <Pagination.Prev onClick={() => moveToPage(currentPage - 1)}/>
-                {Array.from({length: totalPages}, (_, i) => i + 1).map(page => (
+                <Pagination.First onClick={() => moveToPage(1)} />
+                <Pagination.Prev onClick={() => moveToPage(currentPage - 1)} />
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                     <Pagination.Item
                         key={page}
                         active={page === currentPage}
@@ -297,11 +315,11 @@ const UserList = () => {
                         {page}
                     </Pagination.Item>
                 ))}
-                <Pagination.Next onClick={() => moveToPage(currentPage + 1)}/>
-                <Pagination.Last onClick={() => moveToPage(totalPages)}/>
+                <Pagination.Next onClick={() => moveToPage(currentPage + 1)} />
+                <Pagination.Last onClick={() => moveToPage(totalPages)} />
             </Pagination>
         </div>
     );
 }
 
-export default UserList;
+export default AdminList;

@@ -1,0 +1,32 @@
+/* Navigation.css */
+
+.dashboard-nav {
+    background-color: #ffffff; /* 흰색 배경 */
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.dashboard-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+    padding: 0;
+    margin: 0;
+}
+
+.dashboard-nav ul li a {
+    text-decoration: none;
+    color: #333333; /* 중립적인 색상 */
+    font-weight: bold;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.dashboard-nav ul li a:hover {
+    color: #0056b3;
+    transform: translateY(-2px);
+}
