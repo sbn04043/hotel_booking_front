@@ -1,11 +1,12 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import {Button, Carousel, Container, Form, Table} from 'react-bootstrap';
+import {Button, Card, Carousel, Container, Form, Table} from 'react-bootstrap';
 
 import 'bootstrap/dist/css/bootstrap.css';
 
 import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css';
+import travelingImage from "../hotel/traveling.png";
 import {useNavigate} from "react-router-dom";
 
 
@@ -82,6 +83,12 @@ const SearchHotel = () => {
         {id: 12, label: '레지던스+오션뷰'}
     ];
 
+    useEffect(() => {
+        const initialSearchParams = { ...searchParams, startDate: new Date(), endDate: new Date() };
+        setSearchParams(initialSearchParams);
+        handleSearch();  // 컴포넌트가 마운트될 때 handleSearch 호출
+    }, []);
+
     const handleCheckboxChange = (name, id) => {
         setSearchParams(prev => {
             const updatedList = prev[name].includes(id)
@@ -96,7 +103,7 @@ const SearchHotel = () => {
     };
 
     const handleSearch = async (e) => {
-        e.preventDefault();
+        if (e) e.preventDefault();
         console.log('잘 받고 있니?:', searchParams);
 
         try {
@@ -146,49 +153,13 @@ const SearchHotel = () => {
         }
     }
 
-    // let TableRow= ({room, moveToSingle})=> {
-    //     return(
-    //         <tr>
-    //             <td>
-    //                 <Carousel activeIndex={roomIndex} onSelect={handleSelect} className="carousel-container">
-    //
-    //                     {room.imageList.map((roomImages) => (
-    //                         <Carousel.Item key={roomImages}>
-    //                             <div style={{
-    //                                 display: 'flex',
-    //                                 justifyContent: 'center',
-    //                                 alignItems: 'center',
-    //                                 height: '100%' // 높이 조정 필요
-    //                             }}>
-    //                                 <img
-    //                                     src={`http://localhost:8080/room/${roomImages}`}
-    //                                     alt={roomImages}
-    //                                     style={{width: '600px', height: 'auto', alignItems: "center"}}
-    //
-    //                                 />
-    //                             </div>
-    //                         </Carousel.Item>
-    //                     ))}
-    //
-    //                 </Carousel>
-    //             </td>
-    //             {roomType.map(r=>(
-    //                 room.roomTypeId === r.id ?
-    //                     (<td  onClick={()=> moveToSingle(room.id)} key={r.id}> 방 타입: {r.typeName}</td>) :null
-    //             ))}
-    //
-    //             <td  onClick={()=> moveToSingle(room.id)}>{room.roomPrice}</td>
-    //         </tr>
-    //     )
-    // }
+
+    const [hotelIndex, setHotelIndex] = useState(0)
+    const handleSelect = (selectedIndex) => {
+        setHotelIndex(selectedIndex)
+    }
     let moveHotelOne = (id) => {
-        navigate('/hotelOne/' + id, {
-            state: {
-                startDate: searchParams.startDate,
-                endDate: searchParams.endDate,
-                peopleCount: searchParams.peopleCount
-            }
-        })
+        navigate('/hotelOne/' + id)
     }
 
 
@@ -679,42 +650,76 @@ const SearchHotel = () => {
             </Form>
 
             <h2>검색 결과</h2>
-            <Table hover striped bordered>
-                <thead>
-                <tr>
-                    <th>호텔 사진</th>
-                    <th>호텔 이름</th>
-                    <th>도시</th>
-                    <th>등급</th>
-                </tr>
-                </thead>
-
-                <tbody>
+            <div style={styles.cardContainer}>
                 {hotelArr.map(hotel => (
-                    <tr key={hotel.id} onClick={() => moveHotelOne(hotel.id)}>
-                        <td>
-
-                        </td>
-                        <td>
-                            {hotel.hotelName}
-                        </td>
-                        <td>
-                            {cities[hotel.cityId - 1].label}
-                        </td>
-                        <td>
-                            {hotel.hotelGrade}성급
-                        </td>
-                    </tr>
+                    <Card style={{width: '18rem'}}>
+                        <Carousel activeIndex={hotelIndex} onSelect={handleSelect} className="carousel-container">
+                            {(hotel.imageList && hotel.imageList.length > 0) ? (
+                                hotel.imageList.map((hotelImages, imgIndex) => (
+                                    <Carousel.Item key={imgIndex}>
+                                        <div style={styles.imageContainer}>
+                                            <Card.Img
+                                                src={`http://localhost:8080/hotel/${hotelImages}`}
+                                                alt={hotelImages}
+                                                style={styles.image}
+                                            />
+                                        </div>
+                                    </Carousel.Item>
+                                ))
+                            ) : (
+                                <div style={styles.imageContainer}>
+                                    <Card.Img
+                                        src={travelingImage}
+                                        alt="기본 이미지"
+                                        style={styles.image}
+                                    />
+                                </div>
+                            )}
+                        </Carousel>
+                        <Card.Body onClick={() => moveHotelOne(hotel.id)}>
+                            <Card.Title>{hotel.hotelName}</Card.Title>
+                            <Card.Text>
+                                호텔 정보 넣기
+                            </Card.Text>
+                            <Button style={button}>예약하러 가기</Button>
+                        </Card.Body>
+                    </Card>
                 ))}
-                {/*{data.roomList.map(r => (*/}
-                {/*    <TableRow room={r} key={r.id} moveToSingle={moveToSingle}/>*/}
-                {/*))}*/}
-                </tbody>
-            </Table>
+            </div>
+
 
         </Container>
     );
 
+};
+
+const styles = {
+    cardContainer: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: '1rem',
+        justifyContent: 'space-between',
+    },
+    card: {
+        width: '18rem',
+        flex: '1 1 calc(33.333% - 1rem)', // 한 줄에 3개 배치
+        boxSizing: 'border-box',
+    },
+    imageContainer: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '300px', // 적절한 높이 설정
+    },
+    image: {
+        width: '100%',
+        height: '300px',
+    },
+};
+
+const button = {
+    backgroundColor: '#99bffd',
+    borderColor: '#99bffd',
 };
 
 export default SearchHotel;
