@@ -24,7 +24,7 @@ let HotelList = () => {
     }
 
     let moveInsert = () => {
-        navigate('/hotelInsert')
+        navigate('/hotelInsert', {state: {userInfo: userInfo}})
     }
 
 

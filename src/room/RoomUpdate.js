@@ -1,4 +1,4 @@
-import {useNavigate, useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {Button, Container, FormControl, FormSelect, Table} from "react-bootstrap";
@@ -34,6 +34,9 @@ let RoomUpdate = () => {
         breakfastPrice: ''
     })
 
+    let location = useLocation()
+    let userInfo=location.state.userInfo
+
     let onChange = (e) => {
         let {name, value} = e.target
         setInputs({
@@ -43,7 +46,7 @@ let RoomUpdate = () => {
     }
     let nevigate = useNavigate()
     let moveToNext = (id) => {
-        nevigate(`/room/roomOne/${id}`)
+        nevigate(`/room/roomOne/${id}`, {state: {userInfo: userInfo}})
     }
 
     let onSubmit = async (e) => {

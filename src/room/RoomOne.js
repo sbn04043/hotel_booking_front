@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useNavigate, useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import {Button, Carousel, Container, Nav, Navbar, Row, Table} from "react-bootstrap";
 import styles from './Room.module.css'
@@ -15,6 +15,9 @@ let RoomOne = () => {
     let [fileData, setFileData] = useState([])
     const [index, setIndex] = useState(0)
 
+    let location=useLocation()
+    let userInfo = location.state.userInfo
+
     const handleSelect = (selectedIndex) => {
         setIndex(selectedIndex)
     }
@@ -29,11 +32,11 @@ let RoomOne = () => {
 
 
     let onUpdate = () => {
-        nevigate('/room/roomUpdate/' + roomId)
+        nevigate('/room/roomUpdate/' + roomId, {state: {userInfo: userInfo}})
     }
 
     let moveToReservation = () => {
-        nevigate(`/reservation/roomReservation/` + roomId)
+        nevigate(`/reservation/roomReservation/` + roomId, {state: {userInfo: userInfo}})
     }
 
     useEffect(() => {
@@ -64,7 +67,7 @@ let RoomOne = () => {
 
         if (resp.status === 200) {
             // 이부분 에서도 호텔 아이디 값으로 반환 필요
-            nevigate('/hotel/hotelOne/1')
+            nevigate('/hotel/showList', {state: {userInfo: userInfo}})
         }
 
     }

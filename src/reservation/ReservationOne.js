@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {useNavigate, useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import {Button, Carousel, Container, Nav, Navbar, Row, Table} from "react-bootstrap";
 /*resultMap.put("reservationDto", reservationDto);
@@ -17,6 +17,8 @@ let ReservationOne = () => {
     let [fileData, setFileData] = useState([]) // 룸 파일 리스트
     const [roomIndex, setRoomIndex] = useState(0)
 
+    let location=useLocation()
+    let userInfo= location.state.userInfo
 
     const handleSelect = (selectedIndex) => {
         setRoomIndex(selectedIndex)
@@ -37,7 +39,7 @@ let ReservationOne = () => {
                 withCredentials: true
             })
 
-            nevigate('/hotel/hotelAll')
+            nevigate('/hotel/showList', {state: {userInfo: userInfo}})
 
         } catch (error) {
             console.error(error)

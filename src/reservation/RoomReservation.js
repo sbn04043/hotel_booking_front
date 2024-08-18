@@ -1,4 +1,4 @@
-import {useNavigate, useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import React, {useState} from "react";
 import {Button, Container, FormCheck, FormControl, Table} from "react-bootstrap";
 import axios from "axios";
@@ -21,10 +21,13 @@ let RoomReservation = () => {
         enabled: 1
     });
 
+    let location=useLocation()
+    let userInfo = location.state.userInfo
+
     let nevigate = useNavigate();
 
     let moveToNext = (reservationId) => {
-        nevigate(`/reservation/roomReservationOne/${reservationId}`)
+        nevigate(`/reservation/roomReservationOne/${reservationId}`, {state: {userInfo: userInfo}})
     }
 
     let onChange = (e) => {

@@ -23,6 +23,7 @@ const MyPage = () => {
     const handleEditProfile = () => {
         navigate('/guest/mypage/edit', { state: { userInfo } });
     };
+    console.log(userInfo)
 
     return (
         <Container>

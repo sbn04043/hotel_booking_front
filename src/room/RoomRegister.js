@@ -34,10 +34,13 @@ let RoomRegister = () => {
         breakfastPrice: ''
     });
 
+    let location = useLocation()
+    let userInfo=location.state.userInfo
+
     let navigate = useNavigate();
 
     let moveToNext = (roomId) => {
-        navigate(`/room/roomImgInsert/${roomId}`);
+        navigate(`/room/roomImgInsert/${roomId}`,{state: {userInfo: userInfo}});
     };
 
     let onChange = (e) => {

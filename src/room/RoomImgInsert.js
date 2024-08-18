@@ -1,4 +1,4 @@
-import {useNavigate, useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import React, {useState} from "react";
 import axios from "axios";
 import {Button, Container, Form} from "react-bootstrap";
@@ -10,10 +10,13 @@ let RoomImgInsert = () => {
     let [file, setFile] = useState(null); // File state
     let [filePreviews, setFilePreviews] = useState([]); // To store file previews
 
+    let location=useLocation()
+    let userInfo=location.state.userInfo
+
     let navigate = useNavigate()
 
     let moveToNext  = (id) => {
-        navigate('/room/roomOne/' + id)
+        navigate('/room/roomOne/' + id, {state: {userInfo: userInfo}})
     }
 
 

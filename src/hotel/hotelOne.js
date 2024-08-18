@@ -47,8 +47,8 @@ const HotelOne = () => {
     const handleSelect = (selectedIndex) => setRoomIndex(selectedIndex);
     const handleHotelSelect = (selectedIndex) => setIndex(selectedIndex);
 
-    const roomInsert = (hotelId) => navigate(`/room/register/${hotelId}`);
-    const moveToSingle = (roomId) => navigate(`/room/roomOne/${roomId}`);
+    const roomInsert = (hotelId) => navigate(`/room/register/${hotelId}`, {state: {userInfo: userInfo}});
+    const moveToSingle = (roomId) => navigate(`/room/roomOne/${roomId}`, {state: {userInfo: userInfo}});
     const onDelete = async () => {
         const resp = await axios.get(`http://localhost:8080/hotel/delete/${id}`);
         if (resp.status === 200) {

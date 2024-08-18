@@ -25,6 +25,7 @@ let Auth = ({setUser}) => {
         let formData = new FormData();
         formData.append('email', inputs.email);
         formData.append('password', inputs.password);
+
         console.log("서버로 보내는 이메일:", inputs.email);  // 서버에 보내는 이메일
         console.log("서버로 보내는 비번:", inputs.password);  // 비밀번호 출력
 
@@ -51,6 +52,11 @@ let Auth = ({setUser}) => {
                     userTotalAmount: response.data.userTotalAmount
 
                 };
+
+                if(response.data.role === 'BUSINESS') {
+                    setErrorMessage('BUSINESS 사용자로는 GUEST 로그인 페이지에 접근할 수 없습니다.');
+                    return;
+                }
                 setUser(userInfo);
                 navigate('/', {state: {userInfo: userInfo}}); // 메인페이지로 이동
 
