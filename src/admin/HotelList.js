@@ -1,42 +1,52 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Pagination, Table } from "react-bootstrap";
-import { Link } from 'react-router-dom';
+import { Pagination, Table, InputGroup, FormControl } from "react-bootstrap";
 import './HotelList.css';
 
 const HotelList = () => {
-    const [hotels, setHotels] = useState([]); // hotels와 setHotels 상태를 정의함
-    const [loading, setLoading] = useState(true); // 로딩 상태 초기화
-    const [error, setError] = useState(null); // 에러 상태 초기화
-    const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 상태 초기화
-    const hotelsPerPage = 10;
+    const [hotels, setHotels] = useState([]);
+    const [filteredHotels, setFilteredHotels] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태 추가
+    const hotelsPerPage = 20;
 
     useEffect(() => {
         const fetchHotels = async () => {
             try {
                 const response = await axios.get("http://localhost:8080/hotel/hotelAll");
                 if (response.status === 200) {
-                    console.log(response.data.hotelList); // API 응답 데이터 확인
-                    setHotels(response.data.hotelList); // hotelList 배열을 hotels 상태에 저장
+                    setHotels(response.data.hotelList);
+                    setFilteredHotels(response.data.hotelList); // 초기 필터된 호텔 리스트 설정
                 } else {
                     throw new Error('Failed to fetch hotels');
                 }
             } catch (error) {
                 console.error('Failed to fetch hotels:', error);
                 setError('Failed to fetch hotels');
-                setHotels([]); // 오류 발생 시 hotels를 빈 배열로 초기화
+                setHotels([]);
             } finally {
-                setLoading(false); // 로딩 상태 종료
+                setLoading(false);
             }
         };
 
         fetchHotels();
     }, []);
 
+    // 검색어가 변경될 때마다 필터링된 호텔 리스트 업데이트
+    useEffect(() => {
+        const filtered = hotels.filter(hotel =>
+            hotel.hotelName.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setFilteredHotels(filtered);
+        setCurrentPage(1); // 검색할 때 페이지를 첫 페이지로 리셋
+    }, [searchTerm, hotels]);
+
     const indexOfLastHotel = currentPage * hotelsPerPage;
     const indexOfFirstHotel = indexOfLastHotel - hotelsPerPage;
-    const currentHotels = Array.isArray(hotels) ? hotels.slice(indexOfFirstHotel, indexOfLastHotel) : [];
-    const totalPages = Math.ceil(hotels.length / hotelsPerPage);
+    const currentHotels = filteredHotels.slice(indexOfFirstHotel, indexOfLastHotel);
+    const totalPages = Math.ceil(filteredHotels.length / hotelsPerPage);
 
     const moveToPage = (pageNo) => {
         if (pageNo > 0 && pageNo <= totalPages) {
@@ -50,6 +60,18 @@ const HotelList = () => {
     return (
         <div className="hotel-list-container">
             <h1>Hotel List</h1>
+
+            <div className="search-container">
+                <InputGroup className="search-group">
+                    <FormControl
+                        placeholder="Search by hotel name"
+                        aria-label="Search by hotel name"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)} // 검색어 입력 핸들러
+                    />
+                </InputGroup>
+            </div>
+
             <Table hover striped bordered className="hotel-list-table">
                 <thead>
                 <tr>
@@ -58,9 +80,6 @@ const HotelList = () => {
                     <th>Phone</th>
                     <th>Email</th>
                     <th>Grade</th>
-                    <th>Business Nickname</th>
-                    <th>Business Role</th>
-                    <th>Details</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -72,9 +91,6 @@ const HotelList = () => {
                             <td>{hotel.hotelPhone}</td>
                             <td>{hotel.hotelEmail}</td>
                             <td>{hotel.hotelGrade}</td>
-                            <td>{hotel.businessEntity?.nickname || 'N/A'}</td>
-                            <td>{hotel.businessEntity?.role || 'N/A'}</td>
-                            <td><Link to={`/admin/hotelDetail/${hotel.id}`}>View Details</Link></td>
                         </tr>
                     ))
                 ) : (
@@ -84,6 +100,7 @@ const HotelList = () => {
                 )}
                 </tbody>
             </Table>
+
             <Pagination className="justify-content-center">
                 <Pagination.First onClick={() => moveToPage(1)} />
                 <Pagination.Prev onClick={() => moveToPage(currentPage - 1)} />

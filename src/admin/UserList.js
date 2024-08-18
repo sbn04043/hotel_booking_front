@@ -213,22 +213,23 @@ const UserList = () => {
                 <Navigation links={links}/>
             </header>
 
-            <h1 className="dashboard-title">사용자 목록</h1>
-
-            <div className="search-container">
-                <InputGroup className="search-group">
-                    <FormControl
-                        placeholder="Search by nickname"
-                        aria-label="Search by nickname"
-                        aria-describedby="basic-addon2"
-                        value={searchTerm}
-                        onChange={handleSearchChange}
-                    />
-                    <Button variant="outline-secondary" id="button-addon2" onClick={handleSearch} className="search-button">
-                        Search
-                    </Button>
+            <div className="header-container">
+                <h1 className="dashboard-title">사용자 목록</h1>
+                <div className="search-container">
+                    <InputGroup className="search-group">
+                        <FormControl
+                            placeholder="Search by nickname"
+                            aria-label="Search by nickname"
+                            aria-describedby="basic-addon2"
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                        />
+                        <Button variant="outline-secondary" id="button-addon2" onClick={handleSearch} className="search-button">
+                            Search
+                        </Button>
+                    </InputGroup>
                     <Button onClick={handleBackClick} variant="secondary" className="back-button">뒤로가기</Button>
-                </InputGroup>
+                </div>
             </div>
 
             <Table hover striped bordered className="user-list-table">
@@ -280,8 +281,7 @@ const UserList = () => {
                 <Button onClick={handleSaveClick} disabled={selectedUsers.length === 0} className="save-button">
                     Save Changes
                 </Button>
-                <Button variant="danger" onClick={handleDeleteClick} disabled={selectedUsers.length === 0}
-                        className="delete-button">
+                <Button variant="danger" onClick={handleDeleteClick} disabled={selectedUsers.length === 0} className="delete-button">
                     Delete Selected
                 </Button>
             </div>

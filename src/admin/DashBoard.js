@@ -55,11 +55,10 @@ function Dashboard() {
     return (
         <div className="dashboard-container">
             <header className="dashboard-header">
-                <Navigation links={links} /> {/* Navigation 컴포넌트 */}
+                <Navigation links={links}/> {/* Navigation 컴포넌트 */}
             </header>
 
             <h1 className="dashboard-title">관리자 페이지</h1>
-
             <div className="dashboard-cards">
                 <div className="dashboard-card">
                     <div className="card-title">방문 횟수</div>
@@ -74,6 +73,8 @@ function Dashboard() {
                     <div className="card-value">{hotelCount}</div>
                 </div>
             </div>
+
+
         </div>
     );
 }
