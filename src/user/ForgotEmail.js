@@ -1,6 +1,8 @@
-import { Button, Container, FormControl, Table } from "react-bootstrap";
-import { useState } from "react";
+import {Button, Container, FormControl, Table} from "react-bootstrap";
+import {useState} from "react";
 import axios from "axios";
+import style from './User.module.css'
+
 
 let ForgotEmail = () => {
     let [inputs, setInputs] = useState({
@@ -10,7 +12,7 @@ let ForgotEmail = () => {
     let [error, setError] = useState(null);
 
     let onChange = (e) => {
-        let { name, value } = e.target;
+        let {name, value} = e.target;
         setInputs({
             ...inputs,
             [name]: value
@@ -22,7 +24,7 @@ let ForgotEmail = () => {
 
         try {
             let response = await axios({
-                url: 'http://localhost:8081/user/forgot-username',
+                url: 'http://localhost:8080/guest/forgot-username',
                 method: 'POST',
                 data: {
                     name: inputs.name,
@@ -60,7 +62,7 @@ let ForgotEmail = () => {
                 <Table striped hover bordered>
                     <thead>
                     <tr>
-                        <th colSpan={2}>가입한 이메일 찾기</th>
+                        <th colSpan={2} className={"text-center"}>가입한 이메일 찾기</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -89,7 +91,7 @@ let ForgotEmail = () => {
                         </td>
                     </tr>
                     <tr>
-                        <td colSpan={2}>
+                        <td colSpan={2} className={"text-center"}>
                             <Button type="submit">아이디 찾기</Button>
                         </td>
                     </tr>
@@ -99,5 +101,11 @@ let ForgotEmail = () => {
         </Container>
     );
 };
+
+const button = {
+    backgroundColor: '#9ec2fc',
+    borderColor: '#9ec2fc',
+};
+
 
 export default ForgotEmail;

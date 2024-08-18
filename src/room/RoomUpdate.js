@@ -1,11 +1,11 @@
-import { useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {Button, Container, FormControl, FormSelect, Table} from "react-bootstrap";
+import style from './Room.module.css'
 
 
-
-let RoomUpdate= () => {
+let RoomUpdate = () => {
     let parms = useParams()
     let roomId = parms.roomId
 
@@ -49,7 +49,7 @@ let RoomUpdate= () => {
     let onSubmit = async (e) => {
         e.preventDefault()
         //나중에 글쓴이 확인하는거 넣어야함 if문으로
-        let resp = await axios.post('http://localhost:8081/room/update', inputs, {
+        let resp = await axios.post('http://localhost:8080/room/update', inputs, {
             withCredentials: true
         })
         if (resp.status === 200) {
@@ -59,7 +59,7 @@ let RoomUpdate= () => {
 
     useEffect(() => {
         let getUpdate = async () => {
-            let resp = await axios.get('http://localhost:8081/room/showOne/' + roomId, {
+            let resp = await axios.get('http://localhost:8080/room/showOne/' + roomId, {
                 withCredentials: true
             })
             if (resp.status === 200) {
@@ -70,6 +70,7 @@ let RoomUpdate= () => {
     }, [])
 
     return (
+        <div className={style.roomInsertContainer}>
             <Container className={"mt-3"}>
                 <form onSubmit={onSubmit}>
                     <Table striped hover bordered>
@@ -141,7 +142,7 @@ let RoomUpdate= () => {
                                     onChange={onChange}/>
                             </td>
                         </tr>
-                       {/* <tr>
+                        {/* <tr>
                             <td>체크인</td>
                             <td>
                                 <FormControl
@@ -172,6 +173,7 @@ let RoomUpdate= () => {
                     </Table>
                 </form>
             </Container>
+        </div>
     )
 
 
