@@ -18,9 +18,14 @@ let Auth = () => {
     };
 
     let navigate = useNavigate()
+    let nevigate1=useNavigate()
 
     let onRegister = () => {
         navigate('/user/register')
+    }
+
+    let onUserRegister = () => {
+        nevigate1('/user/guestRegister')
     }
 
     let onSubmit = async (e) => {
@@ -81,6 +86,9 @@ let Auth = () => {
                         </td>
                         <td>
                             <Button onClick={onRegister}>회원가입</Button>
+                        </td>
+                        <td>
+                            <Button onClick={onUserRegister}>회원가입</Button>
                         </td>
                     </tr>
                     </tbody>

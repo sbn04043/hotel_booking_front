@@ -14,6 +14,7 @@ import RoomUpdate from "./room/RoomUpdate";
 import RoomImgInsert from "./room/RoomImgInsert";
 import RoomReservation from "./reservation/RoomReservation";
 import ReservationOne from "./reservation/ReservationOne";
+import GuestRegister from "./user/GuestRegister";
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                 <Route path="/user/register" element={<Register/>}/>
                 <Route path="/user/forgotEmail" element={<ForgotEmail/>}/>
                 <Route path="/user/forgotPassword" element={<ForgotPassword/>}/>
+                <Route path="/user/guestRegister" element={<GuestRegister/>}/>
                 <Route path="/search/hotel" element={<SearchHotel/>}/>
                 <Route path="/hotel/hotelAll" element={<HotelList/>}/>
                 <Route path="/hotel/hotelOne/:id" element={<HotelOne/>}/>
