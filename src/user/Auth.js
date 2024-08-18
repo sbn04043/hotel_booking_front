@@ -18,14 +18,14 @@ let Auth = () => {
     };
 
     let navigate = useNavigate()
-    let nevigate1=useNavigate()
+
 
     let onRegister = () => {
         navigate('/user/register')
     }
 
     let onUserRegister = () => {
-        nevigate1('/user/guestRegister')
+        navigate('/user/guestRegister')
     }
 
     let onSubmit = async (e) => {
