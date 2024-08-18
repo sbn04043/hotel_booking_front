@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 
 import DatePicker from "react-datepicker";
 import 'react-datepicker/dist/react-datepicker.css';
+import {useNavigate} from "react-router-dom";
 
 
 const SearchHotel = () => {
@@ -14,6 +15,7 @@ const SearchHotel = () => {
     const [endDate, setEndDate] = useState();
     const [peopleCount, setPeopleCount] = useState(1);
     const [searchDone, setSearchDone] = useState(false); // 검색 완료 여부 상태 추가
+    const navigate = useNavigate();
 
     let [searchParams, setSearchParams] = useState({
         grade: [],
@@ -179,6 +181,16 @@ const SearchHotel = () => {
     //         </tr>
     //     )
     // }
+    let moveHotelOne = (id) => {
+        navigate('/hotelOne/' + id, {
+            state: {
+                startDate: searchParams.startDate,
+                endDate: searchParams.endDate,
+                peopleCount: searchParams.peopleCount
+            }
+        })
+    }
+
 
     return (
         <Container>
@@ -679,8 +691,10 @@ const SearchHotel = () => {
 
                 <tbody>
                 {hotelArr.map(hotel => (
-                    <tr key={hotel.id}>
-                        <td></td>
+                    <tr key={hotel.id} onClick={() => moveHotelOne(hotel.id)}>
+                        <td>
+
+                        </td>
                         <td>
                             {hotel.hotelName}
                         </td>

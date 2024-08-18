@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useNavigate, useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import axios from "axios";
 import {Button, Carousel, Container, Nav, Navbar, Row, Table} from "react-bootstrap";
 import styles from './Room.module.css'
@@ -12,8 +12,21 @@ let RoomOne = () => {
     let params = useParams()
     let roomId = parseInt(params.roomId)
 
+    let [roomPrice, setRoomPrice] = useState(0);
+
     let [fileData, setFileData] = useState([])
     const [index, setIndex] = useState(0)
+
+    const location = useLocation();
+    const [startDate, setStartDate] = useState(
+        location.state.startDate.getFullYear() + "-"
+        + (location.state.startDate.getMonth() + 1) + "-"
+        + location.state.startDate.getDate());
+    const [endDate, setEndDate] = useState(
+        location.state.endDate.getFullYear() + "-"
+        + (location.state.endDate.getMonth() + 1) + "-"
+        + location.state.endDate.getDate());
+    const [price, setPrice] = useState(0);
 
     const handleSelect = (selectedIndex) => {
         setIndex(selectedIndex)
@@ -42,13 +55,16 @@ let RoomOne = () => {
                 let resp = await axios.get('http://localhost:8080/room/showOne/' + roomId, {
                     withCredentials: true
                 })
-                console.log(resp)
+                console.log("rest: " + resp)
                 setData(resp.data.roomDto)
                 setRoomType(resp.data.roomTypeList)
                 let temp = resp.data.roomFileDtoList
                 console.log("temp")
                 console.log(temp)
                 setFileData(resp.data.roomFileDtoList)
+                setRoomPrice(parseInt(resp.data.roomPrice));
+                setPrice(((location.state.endDate - location.state.startDate) / 1000 / 60 / 60 / 24) * roomPrice)
+                console.log(location.state.endDate - location.state.startDate);
                 console.log(fileData)
             } catch (e) {
                 console.log(e)
@@ -147,6 +163,18 @@ let RoomOne = () => {
                             </tr>
                             <tr>
                                 <td colSpan={3}>{data.breakfastPrice}</td>
+                            </tr>
+                            <tr>
+                                <td>시작일</td>
+                                <td colSpan={2}>{startDate}</td>
+                            </tr>
+                            <tr>
+                                <td>종료일</td>
+                                <td colSpan={2}>{endDate}</td>
+                            </tr>
+                            <tr>
+                                <td colSpan={1}>총액:</td>
+                                <td colSpan={2}>{price}</td>
                             </tr>
                             <tr className={"text-center"}>
                                 <td><Button onClick={moveToReservation} style={button}>예약하기</Button></td>

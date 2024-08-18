@@ -7,12 +7,10 @@ import Register from "./user/Register";
 import Map from "./hotel/Map"
 import ForgotEmail from "./user/ForgotEmail";
 import ForgotPassword from "./user/ForgotPassword";
-import Register from "./user/Register";
 import SearchHotel from "./search/hotel";
 import HotelOne from "./hotel/hotelOne";
 import RoomRegister from "./room/RoomRegister";
 import HotelList from "./hotel/HotelList";
-import RoomOne from "./room/RoomOne";
 import RoomUpdate from "./room/RoomUpdate";
 import RoomImgInsert from "./room/RoomImgInsert";
 import RoomReservation from "./reservation/RoomReservation";
@@ -24,8 +22,10 @@ import Mypage from "./user/Mypage";
 import MypageEdit from "./user/MypageEdit";
 import MyReservations from "./user/MyReservations";
 import Wishlist from "./user/Wishlist";
-import Auth from "./user/Auth";
 import Auth1 from "./user/Auth1";
+import HotelInsert from "./hotel/HotelInsert";
+import HotelImgInsert from "./hotel/HotelImgInsert";
+import HotelUpdate from "./hotel/HotelUpdate";
 
 function ShowList() {
     return null;
@@ -46,8 +46,8 @@ function App() {
                 <Route path="/guest/forgotEmail" element={<ForgotEmail/>}/>
                 <Route path="/guest/forgotPassword" element={<ForgotPassword/>}/>
                 <Route path="/guest/mypage/:id" element={<Mypage/>}/>
-                <Route path="/guest/mypage/edit" element={<MypageEdit />} />
-                <Route path="/guest/myReservations/:id" element={<MyReservations />} />
+                <Route path="/guest/mypage/edit" element={<MypageEdit/>}/>
+                <Route path="/guest/myReservations/:id" element={<MyReservations/>}/>
                 <Route path="/guest/wishlist/:id" element={<Wishlist/>}/>
                 <Route path="/" element={<Auth/>}/>
                 <Route path="/hotel/showList" element={<ShowList/>}/>

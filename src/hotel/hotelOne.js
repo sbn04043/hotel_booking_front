@@ -1,15 +1,21 @@
 import React, {useRef, useEffect, useState} from "react";
-import {useNavigate, useParams} from "react-router-dom";
-import {Button, Card, Carousel, Container, Table} from "react-bootstrap";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {Button, Card, Carousel, Container, Form, Row, Table} from "react-bootstrap";
 import axios from "axios";
 import Map from './Map';
 import travelingImage from './traveling.png';
 import style from './Hotel.module.css'
+import DatePicker from "react-datepicker";
 
 const HotelOne = () => {
     const navigate = useNavigate();
     const params = useParams();
     const id = parseInt(params.id);
+    const location = useLocation();
+    const [startDate, setStartDate] = useState();
+
+    const [endDate, setEndDate] = useState("");
+    const [peopleCount, setPeopleCount] = useState("");
 
     const facility = [
         {id: 1, label: '️🏊‍♀️야외수영장'},
@@ -44,7 +50,13 @@ const HotelOne = () => {
     const handleHotelSelect = (selectedIndex) => setIndex(selectedIndex);
 
     const roomInsert = (hotelId) => navigate(`/room/register/${hotelId}`);
-    const moveToSingle = (roomId) => navigate(`/room/roomOne/${roomId}`);
+    const moveToSingle = (roomId) => navigate(`/room/roomOne/${roomId}`, {
+        state: {
+            startDate: startDate,
+            endDate: endDate,
+            peopleCount: peopleCount
+        }
+    });
     const onDelete = async () => {
         const resp = await axios.get(`http://localhost:8080/hotel/delete/${id}`);
         if (resp.status === 200) {
@@ -62,6 +74,13 @@ const HotelOne = () => {
             setHotelData(resp.data.hotelDto);
             setFileData(resp.data.hotelFileDtoList);
             setFacilities(resp.data.facilities);
+            if (location.state.startDate !== null) {
+                setStartDate(location.state.startDate);
+            }
+            if (location.state.endDate !== null) {
+                setEndDate(location.state.endDate);
+            }
+
         };
         fetchHotelData();
     }, [id]);
@@ -81,9 +100,92 @@ const HotelOne = () => {
         fetchRoomData();
     }, [id]);
 
+    const addPeople = () => {
+        if (peopleCount < 9) {
+            setPeopleCount(peopleCount + 1);
+        }
+    }
+
+    const minusPeople = () => {
+        if (peopleCount > 1) {
+            setPeopleCount(peopleCount - 1);
+        }
+    }
+
+    let searchByCondition = async (e) => {
+        e.preventDefault();
+        const params = {
+            hotelId: id,
+            startDate: startDate,
+            endDate: endDate,
+            peopleCount: peopleCount
+        }
+        try {
+            const response = await axios.post('http://localhost:8080/room/showListByCondition', params)
+            console.log(response);
+            setRoomdata(response.data);
+
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     return (
         <Container className={"mt-3"}>
+            <Form onSubmit={searchByCondition}>
+                <Table>
+                    <thead>
+                    <tr>
+                        <td valign='middle' align='center'>
+                            <DatePicker
+                                dateFormat='yyyy-MM-dd'
+                                shouldCloseOnSelect
+                                minDate={new Date()}
+                                selected={startDate}
+                                placeholderText='시작 날짜'
+                                onChange={(date) => {
+                                    setStartDate(date);
+                                }}
+                            />
+                        </td>
+                        <td valign='middle' align='center'>
+                            <DatePicker
+                                dateFormat='yyyy-MM-dd'
+                                shouldCloseOnSelect
+                                minDate={Math.max(startDate, new Date())}
+                                selected={endDate}
+                                placeholderText='마지막 날짜'
+                                onChange={(date) => {
+                                    setEndDate(date);
+                                }}
+                            />
+                        </td>
+                        <td valign='middle' align='center'>
+                            <Table>
+                                <tbody>
+                                <tr>
+                                    <th>
+                                        <Button onClick={minusPeople}>-</Button>
+                                    </th>
+                                    <th>
+                                        <input type='text' className='form-control' disabled='true'
+                                               value={'인원수: ' + peopleCount}/>
+                                    </th>
+                                    <th>
+                                        <Button onClick={addPeople}>+</Button>
+                                    </th>
+                                </tr>
+                                </tbody>
+                            </Table>
+                        </td>
+                        <td valign='middle' align='center'>
+                            <Button type="submit">검색</Button>
+                        </td>
+                    </tr>
+                    </thead>
+                </Table>
+            </Form>
+
             <Carousel activeIndex={index} onSelect={handleHotelSelect} className="carousel-container">
                 {fileData.length > 0 ? (
                     fileData.map((file) => (
@@ -142,7 +244,6 @@ const HotelOne = () => {
                 </div>
 
                 <div className={style.hotelMap}><Map address={hotelData.address}/></div>
-
             </div>
 
 
@@ -191,7 +292,7 @@ const HotelOne = () => {
                     ))
                 ) : (
                     <div className={style.room}>
-                            <h2>No rooms are registered</h2>
+                        <h2>No rooms are registered</h2>
                     </div>
                 )}
             </div>
