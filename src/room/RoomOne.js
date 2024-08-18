@@ -26,6 +26,7 @@ let RoomOne = () => {
         location.state.endDate.getFullYear() + "-"
         + (location.state.endDate.getMonth() + 1) + "-"
         + location.state.endDate.getDate());
+    let day = (location.state.endDate - location.state.startDate) / 1000 / 60 / 60 / 24;
     const [price, setPrice] = useState(0);
 
     const handleSelect = (selectedIndex) => {
@@ -63,8 +64,10 @@ let RoomOne = () => {
                 console.log(temp)
                 setFileData(resp.data.roomFileDtoList)
                 setRoomPrice(parseInt(resp.data.roomPrice));
-                setPrice(((location.state.endDate - location.state.startDate) / 1000 / 60 / 60 / 24) * roomPrice)
-                console.log(location.state.endDate - location.state.startDate);
+
+                console.log(Math.ceil(day))
+                setPrice(roomPrice * (Math.ceil(day) - 1))
+                console.log(roomPrice);
                 console.log(fileData)
             } catch (e) {
                 console.log(e)

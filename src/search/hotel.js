@@ -159,7 +159,13 @@ const SearchHotel = () => {
         setHotelIndex(selectedIndex)
     }
     let moveHotelOne = (id) => {
-        navigate('/hotelOne/' + id)
+        navigate('/hotelOne/' + id, {
+            state: {
+                startDate: searchParams.startDate,
+                endDate: searchParams.endDate,
+                peopleCount: searchParams.peopleCount
+            }
+        })
     }
 
 

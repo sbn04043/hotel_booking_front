@@ -5,7 +5,7 @@ import axios from "axios";
 import Map from './Map';
 import travelingImage from './traveling.png';
 import style from './Hotel.module.css'
-import { AiFillHeart } from "react-icons/ai";
+import {AiFillHeart} from "react-icons/ai";
 import DatePicker from "react-datepicker";
 
 const HotelOne = () => {
@@ -16,7 +16,7 @@ const HotelOne = () => {
     const [startDate, setStartDate] = useState();
 
     const [endDate, setEndDate] = useState("");
-    const [peopleCount, setPeopleCount] = useState("");
+    const [peopleCount, setPeopleCount] = useState(location.state.peopleCount);
 
     const facility = [
         {id: 1, label: '️🏊‍♀️야외수영장'},
@@ -69,13 +69,12 @@ const HotelOne = () => {
         navigate('/hotelUpdate/' + id)
     }
 
-    let [wish, setWish] = useState( {
-        hotelId: id ,
+    let [wish, setWish] = useState({
+        hotelId: id,
         guestId: 1
     })
 
     const [isWished, setIsWished] = useState(false);
-
 
 
     const wishList = async () => {
@@ -114,6 +113,7 @@ const HotelOne = () => {
                 if (resp.status === 200) {
                     setRoomdata(resp.data);
                     setRoomType(resp.data.roomTypeList);
+                    console.log(resp.data)
                 }
             } catch (e) {
                 console.error(e);
@@ -258,7 +258,8 @@ const HotelOne = () => {
                 )}
             </Carousel>
             <h1 className="mb-5">{hotelData.hotelName}
-                <AiFillHeart onClick={wishList}  style={{ cursor: 'pointer', fontSize: '45px', color: isWished ? 'red' : 'lightgray' }}/>
+                <AiFillHeart onClick={wishList}
+                             style={{cursor: 'pointer', fontSize: '45px', color: isWished ? 'red' : 'lightgray'}}/>
 
             </h1>
             <div className={style.hotelContainer}>
@@ -311,7 +312,14 @@ const HotelOne = () => {
                                     ))}
                                     {r.roomPrice}
                                 </Card.Text>
-                                <Button style={button}>예약하러 가기</Button>
+                                {roomdata.roomMax > 0 ?
+                                    (
+                                        <Button style={button}>예약하러 가기</Button>)
+                                    :
+                                    (
+                                        <Button disabled>예약 가능한 객실이 없습니다</Button>
+                                    )
+                                }
                             </Card.Body>
                         </Card>
                     ))

@@ -9,7 +9,6 @@ import ForgotPassword from "./user/ForgotPassword";
 import SearchHotel from "./search/hotel";
 import HotelOne from "./hotel/hotelOne";
 import RoomRegister from "./room/RoomRegister";
-import HotelList from "./hotel/HotelList";
 import RoomUpdate from "./room/RoomUpdate";
 import RoomImgInsert from "./room/RoomImgInsert";
 import RoomReservation from "./reservation/RoomReservation";
@@ -26,9 +25,6 @@ import HotelInsert from "./hotel/HotelInsert";
 import HotelImgInsert from "./hotel/HotelImgInsert";
 import HotelUpdate from "./hotel/HotelUpdate";
 import Auth from "./user/Auth";
-import HotelInsert from "./hotel/HotelInsert";
-import HotelImgInsert from "./hotel/HotelImgInsert";
-import HotelUpdate from "./hotel/HotelUpdate";
 
 function ShowList() {
     return null;
