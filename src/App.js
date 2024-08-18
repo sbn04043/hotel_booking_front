@@ -28,9 +28,8 @@ import HotelUpdate from "./hotel/HotelUpdate";
 import UserList from "./admin/UserList";
 import DashBoard from "./admin/DashBoard";
 import UserDetails from "./admin/UserDetails";
-import AdminhotelDetails from "./admin/AdminhotelDetails";
-import AdminList from "./admin/AdminList";
-import AdminHotelList from "./admin/AdminHotelList";
+import HotelDetails from "./admin/HotelDetails";
+import GuestRegister from "./user/GuestRegister";
 
 
 
@@ -42,7 +41,7 @@ const App = ({setUserInfo})  => {
             <Routes>
                 <Route path="/" element={<SearchHotel/>}/>
 
-                <Route path="/business/auth" element={<Auth/>}/>
+                <Route path="/business/auth" element={<Auth setUser={setUserInfo}/>}/>
                 <Route path="/user/register" element={<Register/>}/>
 
                 <Route path="/guest/auth" element={<Auth1 setUser={setUserInfo}/>}/>
@@ -58,13 +57,12 @@ const App = ({setUserInfo})  => {
                 <Route path="/" element={<Auth setUserInfo={setUserInfo} />} />
                 <Route path="/admin/userList" element={<UserList />} />
                 {/*<Route path="/" element={<Auth/>}/>*/}
-                <Route path="/user/Register" element={<Register/>}/>
+                <Route path="/guest/Register" element={<GuestRegister/>}/>
                 <Route path="/admin/userList" element={<UserList/>}/>
-                <Route path="/admin/hotelList" element={<AdminHotelList/>}/>
+                <Route path="/admin/hotelList" element={<HotelList/>}/>
                 <Route path="/admin/" element={<DashBoard/>}/>
                 <Route path="/admin/userdetails/:id" element={<UserDetails/>}/>
-                <Route path="/admin/hoteDetails/:id" element={<AdminhotelDetails/>}/>
-                <Route path="/admin/AdminList" element={<AdminList/>}/>
+                <Route path="/admin/hoteDetails/:id" element={<HotelDetails/>}/>
 
                 <Route path="/Map" element={<Map/>}/>
 
